@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #users {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .user-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-id {
+            font-weight: bold;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+        .user-card button {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .accept-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .reject-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Control Panel</h1>
+    <div id="users">
+        <!-- Waiting users will be dynamically inserted here -->
+    </div>
+
+    <script>
+        const usersContainer = document.getElementById('users');
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const users = await response.json();
+                renderUsers(users);
+            } catch (error) {
+                console.error('Failed to fetch users:', error);
+                usersContainer.innerHTML = '<p>Error loading users. Please try again later.</p>';
+            }
+        }
+
+        function renderUsers(users) {
+            usersContainer.innerHTML = ''; // Clear the container
+            if (users.length === 0) {
+                usersContainer.innerHTML = '<p>No users are currently waiting.</p>';
+                return;
+            }
+            users.forEach(userId => {
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.innerHTML = `
+                    <span class="user-id">${userId}</span>
+                    <div>
+                        <button class="accept-btn" onclick="sendAction('${userId}', 'accept')">Accept</button>
+                        <button class="reject-btn" onclick="sendAction('${userId}', 'reject')">Reject</button>
+                    </div>
+                `;
+                usersContainer.appendChild(card);
+            });
+        }
+
+        async function sendAction(userId, action) {
+            try {
+                await fetch('/api/action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, action }),
+                });
+                // Refresh the user list immediately after an action
+                fetchUsers(); 
+            } catch (error) {
+                console.error(`Failed to send action '${action}' for user ${userId}:`, error);
+                alert(`Could not perform action. See console for details.`);
+            }
+        }
+
+        // Fetch users every 3 seconds to keep the list up-to-date
+        setInterval(fetchUsers, 3000);
+
+        // Initial fetch on page load
+        fetchUsers();
+    </script>
+</body>
+</html>
