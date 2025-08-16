@@ -1,0 +1,17 @@
+{
+  "name": "manual-redirect",
+  "version": "1.0.0",
+  "description": "A web app with manual user redirection.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "socket.io": "^4.8.1"
+  }
+}
