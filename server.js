@@ -2,14 +2,13 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const TelegramBot = require('node-telegram-bot-api');
+require('dotenv').config();
 
 // --- WARNING ---
 // It is strongly recommended to use environment variables for sensitive data like bot tokens.
 // For example, you could use a .env file and the dotenv package.
-// const botToken = process.env.TELEGRAM_BOT_TOKEN;
-// const chatId = process.env.TELEGRAM_CHAT_ID;
-const botToken = '8406577100:AAF7mvVd2svcSC7A2GdI6aq-i5x7o_sTbto';
-const chatId = '612575358';
+const botToken = process.env.TELEGRAM_BOT_TOKEN;
+const chatId = process.env.TELEGRAM_CHAT_ID;
 
 // Initialize Telegram Bot
 const bot = new TelegramBot(botToken);
