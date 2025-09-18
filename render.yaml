@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: manual-redirect
+    env: node
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "node server.js"
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: YOUR_TELEGRAM_BOT_TOKEN_HERE
+      - key: TELEGRAM_CHAT_ID
+        value: YOUR_TELEGRAM_CHAT_ID_HERE
+      - key: PORT
+        value: 3000
